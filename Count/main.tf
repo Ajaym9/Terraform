@@ -12,4 +12,5 @@ resource "google_storage_bucket" "bucket" {
   name          = var.buckets[count.index]              #"image-store.com"
   location      = var.location                          #"EU"
   force_destroy = var.force_destroy                     #true
+  project        = "target-11695"
 }
