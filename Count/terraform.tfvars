@@ -1,0 +1,1 @@
+buckets = ["gcs1", "gcs2"]

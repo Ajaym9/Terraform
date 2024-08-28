@@ -3,3 +3,11 @@ variable "user_names" {
   type        = list(string)
   default     = ["user1", "user2", "user3"]
 }
+
+
+
+#######################GCS variable file#############
+
+variable "buckets" {
+    type = list(string)
+}
