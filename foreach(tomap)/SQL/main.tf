@@ -28,6 +28,8 @@
 }*/
 
 
+#######################SQL for_each code##############
+
 resource "google_sql_database_instance" "main1" {
   for_each         = tomap(var.sql-instance)
   name             = each.key
