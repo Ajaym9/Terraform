@@ -1,3 +1,6 @@
+
+#######################SQL hardcoded code##############
+
 /*resource "google_sql_database_instance" "main" {
   name             = "main-instance"
   project = "target-11695"
