@@ -1,0 +1,9 @@
+root@holcimiactestvm:/home/holcimiac# cat backend.tf
+terraform {
+  backend "gcs" {
+    bucket  = "buc-std-eur-w1b-01"
+    prefix  = "terraform/state"
+    credentials="/home/holcimiac/sa-iac.json"
+  }
+#gs://buc-std-eur-w1b-01/terraform/state/default.tfstate
+}

@@ -1,0 +1,46 @@
+gcp-region           = "europe-west1"
+#credentials          = "/home/holcimiac/sa-iac.json"
+
+#second level LOB's under organization
+org-id = "477461727694"
+lob_folder_names = ["emeaio","nam","lam","gdh","asia","corp","emeadc","payable entry"]
+
+#third level divisons under hol-emeaio LOB
+divison_folder_names = ["emeaio-policy staging","emeaio-exception projects","emeaio-digital initiatives","emeaio-security","emeaio-landscape projects","emeaio-traditional projects","emeaio-suspended projects","emeaio-core projects"]
+
+#third level divisons under corp LOB
+corpdivison_folder_names = ["corp-gds","corp-io","corp-security"]
+
+
+#fourth level sub-divisons under Digital initiatives divison
+DI-sub-divison_folder_names = ["initiative 1 ou","initiative 2 ou","initiative 3 ou"]
+
+
+#fourth level sub-divisons under security divison
+sec-sub-divison_folder_names = ["logs account","audit account"]
+
+
+#sub-divisons and enviroments under landscape divison
+ls-sde_folder_names =  ["DR account ou","sandbox account ou","landscape p account","landscape n account","landscape shrdsr account"]
+
+
+#fifth level core & security under core divison
+core-cs_folder_names = ["iam account","iac","network","sec tool","sec break-glass account"]
+
+
+#sixth level environment under initiative 1 ou
+initiative1-env_folder_names = ["initiative 1 p account","initiative 1 n account"]
+
+
+#sixth level environment under initiative 2 ou
+initiative2-env_folder_names = ["initiative 2 p account","initiative 2 n account"]
+
+
+#sixth level environment under GDS
+GDS-env_folder_names = ["gds p account","gds dev account"]
+
+
+#sixth level environment under I&O
+IandO-env_folder_names = ["io p account","io dev account"]
+
+

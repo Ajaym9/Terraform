@@ -1,0 +1,182 @@
+#first level folders
+resource "google_folder" "lob" {
+for_each = toset(var.lob_folder_names)
+display_name = each.value
+parent = "organizations/${var.org-id}"
+  timeouts {
+    create = "20m"
+    update = "20m"
+    delete = "20m"
+  }
+}
+
+
+#second level divison under emeaio
+
+
+resource "google_folder" "divison"{
+for_each = toset(var.divison_folder_names)
+display_name = each.value
+parent = google_folder.lob["hol-emeaio"].name
+depends_on = [
+google_folder.lob
+]
+timeouts {
+    create = "20m"
+    update = "20m"
+    delete = "20m"
+  }
+}
+
+#second level divison under corp
+
+resource "google_folder" "corpdivison"{
+for_each = toset(var.corpdivison_folder_names)
+display_name = each.value
+parent = google_folder.lob["hol-corp"].name
+depends_on = [
+google_folder.lob
+]
+timeouts {
+    create = "20m"
+    update = "20m"
+    delete = "20m"
+  }
+}
+
+# third level sub-divison under DI divison
+
+resource "google_folder" "DI-sub-divison"{
+for_each = toset(var.DI-sub-divison_folder_names)
+display_name = each.value
+parent = google_folder.divison["emeaio-digital initiatives"].name
+depends_on = [
+google_folder.divison
+]
+timeouts {
+    create = "20m"
+    update = "20m"
+    delete = "20m"
+  }
+}
+
+# third level sub-divison under security divison
+
+resource "google_folder" "sec-sub-divison"{
+for_each = toset(var.sec-sub-divison_folder_names)
+display_name = each.value
+parent = google_folder.divison["emeaio-security"].name
+depends_on = [
+google_folder.divison
+]
+timeouts {
+    create = "20m"
+    update = "20m"
+    delete = "20m"
+  }
+}
+
+
+# third and fourth level sub-divison&environments under Landscape divison
+resource "google_folder" "ls-sub-divison"{
+for_each = toset(var.ls-sde_folder_names)
+display_name = each.value
+parent = google_folder.divison["emeaio-landscape projects"].name
+depends_on = [
+google_folder.divison
+]
+timeouts {
+    create = "20m"
+    update = "20m"
+    delete = "20m"
+  }
+}
+
+#fourth level core & security under core projects divison
+resource "google_folder" "core-cands"{
+for_each = toset(var.core-cs_folder_names)
+display_name = each.value
+parent = google_folder.divison["emeaio-core projects"].name
+depends_on = [
+google_folder.divison
+]
+timeouts {
+    create = "20m"
+    update = "20m"
+    delete = "20m"
+  }
+}
+
+#fifth level environment under initiative 1 ou sub-divison
+resource "google_folder" "initiative1-env"{
+for_each = toset(var.initiative1-env_folder_names)
+display_name = each.value
+parent = google_folder.DI-sub-divison["initiative 1 ou"].name
+depends_on = [
+google_folder.DI-sub-divison
+]
+timeouts {
+    create = "20m"
+    update = "20m"
+    delete = "20m"
+  }
+}
+
+#fifth level environment under initiative 2 ou sub-divison
+resource "google_folder" "initiative2-env"{
+for_each = toset(var.initiative2-env_folder_names)
+display_name = each.value
+parent = google_folder.DI-sub-divison["initiative 2 ou"].name
+depends_on = [
+google_folder.DI-sub-divison
+]
+timeouts {
+    create = "20m"
+    update = "20m"
+    delete = "20m"
+  }
+}
+
+#fifth level environment under GDS divison
+resource "google_folder" "GDS-env"{
+for_each = toset(var.GDS-env_folder_names)
+display_name = each.value
+parent = google_folder.corpdivison["corp-gds"].name
+depends_on = [
+google_folder.corpdivison
+]
+timeouts {
+    create = "20m"
+    update = "20m"
+    delete = "20m"
+  }
+}
+
+#fifth level environment under I&O divison
+resource "google_folder" "IandO-env"{
+for_each = toset(var.IandO-env_folder_names)
+display_name = each.value
+parent = google_folder.corpdivison["corp-io"].name
+depends_on = [
+google_folder.corpdivison
+]
+timeouts {
+    create = "20m"
+    update = "20m"
+    delete = "20m"
+  }
+}
+
+#fifth level environment under Security divison
+resource "google_folder" "sec-env" {
+  display_name = "security dev"
+parent = google_folder.corpdivison["corp-security"].name
+depends_on = [
+google_folder.corpdivison
+]
+timeouts {
+    create = "20m"
+    update = "20m"
+    delete = "20m"
+  }
+}

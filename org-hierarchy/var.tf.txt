@@ -1,0 +1,66 @@
+variable "org-id"{
+type = string
+}
+
+
+variable "lob_folder_names"{
+type=list(any)
+}
+
+variable "gcp-region"{
+type = string
+}
+
+variable "divison_folder_names"{
+type = list(string)
+description = "divisons under emeaio"
+}
+
+
+
+variable "corpdivison_folder_names"{
+type = list(string)
+description = "divisons under corp"
+}
+
+
+
+variable "DI-sub-divison_folder_names"{
+type = list(string)
+description = "sub-divisons under DI divison"
+}
+
+
+variable "sec-sub-divison_folder_names"{
+type = list(string)
+description = "sub-divisons under sec divison"
+}
+
+
+variable "ls-sde_folder_names"{
+type = list(string)
+description = "sub-divisons&environments under landscape divison"
+}
+
+variable"core-cs_folder_names"{
+type = list(string)
+description = "core&security under core divison"
+}
+
+variable "initiative1-env_folder_names"{
+type = list(string)
+description = "initiative 1 ou environment folders"
+}
+
+variable "initiative2-env_folder_names"{
+type = list(string)
+description = "initiative 1 ou environment folders"
+}
+variable "GDS-env_folder_names"{
+type = list(string)
+description = "GDS environment folders"
+}
+variable "IandO-env_folder_names"{
+type = list(string)
+description = "I & O environment folders"
+}
