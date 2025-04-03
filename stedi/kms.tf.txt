@@ -1,0 +1,35 @@
+#resource block for creation of keyring
+resource "google_kms_key_ring" "keyring" {
+  for_each = var.keyrings
+  name     =  each.key
+  project = module.project-factory.project_id
+  location = "us-central1"
+  
+}
+
+#resource block for creation of key
+resource "google_kms_crypto_key" "kms_crypto_key" {
+  for_each = var.keyrings
+  name            = each.value.keyname
+  key_ring        = google_kms_key_ring.keyring[each.key].id
+  purpose  = each.value.purpose
+  rotation_period = each.value.rotation_period
+  version_template {
+    algorithm = each.value.algorithm
+    protection_level = each.value.protection_level
+  }
+  lifecycle {
+    prevent_destroy = false
+  }
+  
+}
+
+#resource block for adding version to key
+resource "google_kms_crypto_key_version" "kms_crypto_key_version" {
+  for_each = var.keyrings
+  crypto_key = google_kms_crypto_key.kms_crypto_key[each.key].id
+  state = "ENABLED"
+  
+}
+
+

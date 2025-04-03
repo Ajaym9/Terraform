@@ -1,0 +1,14 @@
+#resource block for creation of network endpoint group
+resource "google_compute_region_network_endpoint_group" "psc_neg" {
+  project               = module.project-factory.project_id
+  for_each              = var.neg_details
+  name                  = each.key
+  region                = "us-central1"
+  network               = google_compute_network.vpc.id
+  subnetwork            = "sei-wilis-wil-sub-usc1-${var.environment}-01"
+  network_endpoint_type = each.value.network_endpoint_type
+  psc_target_service    = each.value.psc_target_service
+  psc_data{
+    
+  }
+}

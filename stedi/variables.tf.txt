@@ -1,0 +1,483 @@
+#variable for project name
+variable "project_name" {
+  description = "The name of the project."
+}
+
+#variable for biiing account
+variable "billing_acct_id" {
+  description = "The ID of the billing account to associate this project with."
+}
+
+#variable for org id
+variable "org_id" {
+  description = "The ID of the organization."
+}
+
+#variable for folder id
+variable "folder_id" {
+  description = "Folder ID for non-prod projects."
+}
+ 
+#variable for project id
+variable "project_id" {
+  type = string
+  description = "Variable for project ID"
+}
+
+# Variable for Environment
+variable "environment" {
+  description = "Variable to store environment name"
+}
+ 
+#variable for enabling api
+variable "enable" {
+  description = "Actually enable the APIs listed"
+  default     = true
+}
+
+#variables for vpc configuration
+variable "vpc_name" {
+  type = string
+  description = "Variable for vpc name"
+}
+
+variable "subnet_name" {
+  type = string
+  description = "Variable for subnet name"
+}
+
+variable "ip_range" {
+  type = string
+  description = "Variable for ip range of subnet"
+}
+
+variable "range_name" {
+   type = string
+   description = "Variable for subnet range name"
+}
+variable "sec_ip_range" {
+   type = string
+   description = "Variable for secondary ip range of subnet"
+}
+variable "range_name_2" {
+   type = string
+   description = "Variable for  second secondary range name of subnet"
+}
+variable "sec_ip_range_2" {
+   type = string
+   description = "Variable for second secondary ip range  of subnet"
+}
+
+variable "subnet_details" {
+  type = map(object({
+     subnet_name = string
+    ip_range = string
+    vpc_name = string
+    create = bool
+    purpose =string
+  }))
+    description = "Variable for subnet creation"
+}
+
+#variable for external ip configurations
+variable "external_ip_name" {
+  type = list(string)
+  description = "Variable for external ip name"
+
+}
+
+#variable for global external ip configurations
+ variable "global_ip_name" {
+    type = list(string)
+    description = "Variable for global ip address name"
+}
+
+#variable for internal ip configurations
+variable "internal_ip_details" {
+  type = map(object({
+    name = string
+    subnet_name = string
+    address = string
+    create = bool
+  }))
+  description = "Variable for internal ip name"
+
+}
+
+#variable for router configurations
+variable "router_name" {
+  type = string
+  description = "Variable for Cloud Router name"
+}
+
+#variable for nat configurations
+variable "nat_name" {
+  type = string
+  description = "Variable for Cloud NAT name"
+}
+
+# #variables for private service connect configurations
+variable "psc_ip_range" {
+  type = map(object({
+  prefix_length = number
+  address = string
+  
+  }))
+  description = "Variable for private service connect name"
+}
+
+# #variables for keyrings configurations
+variable "keyrings" {
+  type = map(object({
+        keyname = string
+        algorithm =string
+        rotation_period =string
+        purpose =string
+       protection_level = string
+    
+   }))
+  description = "variable for Keyring Configurations"
+}
+
+#variables for apigee configurations
+variable "apigee_instance_name" {
+  type = string
+  description = "Variable for apigee instange name"
+}
+
+
+variable "runtime_ip_cidr_range" {
+   type = string
+   description = "Variable for runtime ip range "
+}
+
+
+variable "env_name" {
+   type = string
+   description = "Variable for apigee environment name"
+  }
+
+variable "env_grp" {
+  type = string
+  description = "Variable for apigee environment group"
+  }
+
+variable "hostnames" {
+  type = list(string)
+  description = "Variable for apigee host name"
+    
+  }
+
+variable "target_servers" {
+  description = "A map of target servers with host and port information"
+  type = map(object({
+    name = string
+    host = string
+    port = number
+  }))
+}
+
+
+# #variables for network endpoint group configurations
+variable "neg_details" {
+  type = map(object({
+    network_endpoint_type = string
+    psc_target_service = string
+    }
+  ))
+  description = "Variable for Netqork endpoint details"
+}
+
+# #variables for kubernetes cluster configurations
+variable "cluster_name" {
+  type = string
+  description = "Variable for gke cluster name"
+}
+
+variable "cluster_ipv4_cidr_block" {
+  type = string
+  description = "Variable for gke cluster ip range"
+}
+
+variable "services_ipv4_cidr_block" {
+  type = string
+  description = "Variable for gke cluster service ip range"
+}
+
+variable "master_ipv4_cidr_block" {
+  type = string
+  description = "Variable for gke cluster master ip range "
+}
+variable "private_endpoint" {
+  type = bool
+  description = "Variable for gke cluster private connectivity"
+}
+
+#variables for external load balancer configurations
+variable "managed_domains" {
+  type = list(string)
+  description = "Variable for external load balancer domains"
+}
+variable "cert_name" {
+  type = string
+  description = "Variable for ssl certificate name"
+}
+variable "cert1_name" {
+  type = string
+  description = "Variable for ssl certificate name"
+}
+
+
+# #variables for postgres sql instance configurations
+
+variable "sql_name" {
+  type = string
+  description = "Variable for sql instance name"
+}
+variable "tier" {
+  type = string
+  description = "Variable for sql instance tier"
+}
+variable "disk_size" {
+     type = string
+     description = "Variable for sql instance disk size"
+}
+variable "ipv4_enabled" {
+  type = bool
+  description = "Variable for sql instance public endpoint"
+}
+
+variable "root_password" {
+  type = string
+  description = "Variable for sql instance root password"
+}
+variable "authorized_networks_name" {
+  type = string
+  description = "Variable for sql instance authorized network name"
+}
+variable "authorized_networks_value" {
+  type = string
+  description = "Variable for sql instance authorized network ip"
+}
+variable "authorized_networks_name1" {
+  type = string
+  description = "Variable for sql instance authorized network name"
+}
+variable "authorized_networks_value1" {
+  type = string
+  description = "Variable for sql instance authorized network ip"
+}
+variable "availability_type" {
+  type = string
+  description = "Variable for sql instance high availability"
+}
+variable "authorized_networks" {
+  description = "List of authorized networks for the Cloud SQL instance"
+  type = list(object({
+    name  = string
+    value = string
+  }))
+  default = []
+}
+variable "point_in_time_recovery_enabled" {
+  type = bool
+  description = "Variable for sql instance point in time recovery"
+}
+variable "sql_replica_name" {
+  type = string
+  description = "Variable for sql instance replica name"
+}
+variable "backup_location" {
+  type = string
+  description = "Variable for sql instance backup location"
+}
+ variable "backup" {
+   type = bool
+   description = "Backup value for Read Replica"
+ }
+ 
+
+variable "vmdetails" {
+  type = map(object({
+    name = string
+    machine_type = string
+    zone = string
+    image = string
+    type = string
+    size = string
+    scopes = list(string)
+  }))
+  description = "Creation of VM details"
+}
+
+#variable for Firewall configurations
+variable "firewall_details" {
+  type = map(object({
+    firewall_name = string
+    priority=number
+    direction=string
+    src_ranges = list(string)
+    ports =list(string)
+    protocol = string 
+  }))
+  description = "Variable for Firewall configurations"
+}
+
+#variables for dns peering configurations
+variable "dns_peering_name" {
+  type = string
+  description = "Variable for dns peering name"
+}
+variable "dns_suffix_name" {
+  type = string
+  description = "Variable for dns suffix name"
+}
+
+#variable for gcs bucket configurations
+variable "gcs_bucket_name" {
+  type = list(string)
+  description = "Variable for gcs bucket name"
+}
+variable "gcs_folder_details" {
+  type = map(object({
+    gcs_folder_name = string
+    bucket_name = string
+  }))
+  description = "Variable for folder in gcs bucket"
+}
+
+#variables for service account configurations
+variable "service_account_id" {
+  type = list(string)
+  description = "Variable for service account id"
+}
+variable "service_account_name" {
+  type = list(string)
+  description = "Variable for service account name"
+}
+
+variable "sa-id"{
+  type = string
+  description = "Variable for service account ID"
+}
+variable "sa_ids" {
+  type = list(string)
+  description = "Variable for service account id for key creation"
+}
+variable "sa_alias" {
+  type = list(string)
+  description = "Short alias for service account to store values in secret manager"
+}
+# #variables for firestore database configurations
+variable "firestore_name" {
+  type = list(string)
+  description = "Variable for firestore name"
+  
+}
+
+
+#variables for PubSub
+variable "topic_name" {
+  type        = string
+  description = "variable for pubsub topic name"
+}
+variable "sub_name" {
+  type        = string
+  description = "variable for pubsub subscription name"
+}
+
+variable "pubsubtopic_name" {
+  type = list(string)
+  description = "variable for pubsub topic name"
+}
+variable "pubsubsubscription_details" {
+  type = map(object({
+    name = string
+    topic = string
+  }))
+   description = "variable for pubsub subscription name"
+}
+
+
+variable "managed_zone" {
+  type = map(object({
+    managed_zone_name = string
+    dns_name = string
+  }))
+   description = "variable for zone details"
+}
+
+variable "record_set_details" {
+  type = map(object({
+     name = string
+     managed_zone = string
+     rrdatas = list(string)
+
+  }))
+   description = "variable for record set details"
+}
+
+#variables for artifact registry
+variable "artifact_registry"{
+type=list(string)
+ description = "variable for artifact registry"
+}
+
+variable "redis_cluster_details" {
+  type = map(object({
+    redis_cluster_name = string
+    network_name       = string
+  }))
+   description = "variable for redis cluster"
+}
+
+variable "network_policy_details" {
+  type = map(object({
+    policy_name  = string
+    network_name = string
+    subnet_name  = list(string)
+
+  }))
+   description = "variable for network policy details"
+}
+
+
+#monitoring details 
+variable "notification_channel_details"{
+  type = map(object({
+    create = bool
+    notification_channel_name = string
+    email_address = string 
+  }))
+   description = "variable for notification channel details"
+}
+
+variable "monitoring_details" {
+  type = map(object({
+    display_name       = string
+    combiner           = string
+    condition_name     = string
+    filter             = string
+    duration           = string
+    threshold_value    = string
+    comparison         = string
+    alignment_period   = string
+    per_series_aligner = string
+     }))
+   description = "variable for monitoring details"
+}
+
+
+variable "disks" {
+  type = map(object({
+    name = string
+    zone = string
+    
+  }))
+  description = "Variable for disk to take snapshot"
+}
+variable "day" {
+type = string
+description = "Variable for day of taking snapshot"
+}
+

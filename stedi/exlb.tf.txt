@@ -1,0 +1,90 @@
+#resource block for creation of manages ssl certificates
+resource "google_compute_managed_ssl_certificate" "cert" {
+  name          = var.cert_name
+  type          = "MANAGED"
+  project       = module.project-factory.project_id
+  managed {
+    domains     = var.managed_domains
+  }
+  lifecycle {
+    create_before_destroy = true
+  }
+  
+}
+
+#resource block for Configuration of Global Forwarding Rule
+resource "google_compute_global_forwarding_rule" "forwarding_rule" {
+  project               = module.project-factory.project_id
+  name                  = "sei-wilis-wil-gfr-apg-glb-${var.environment}-01"
+  target                = google_compute_target_https_proxy.https_proxy.id
+  ip_address            = "projects/${module.project-factory.project_name}/global/addresses/sei-wilis-wil-eip-apg-glb-${var.environment}-01"
+  port_range            = "443"
+  load_balancing_scheme = "EXTERNAL_MANAGED"
+  depends_on            = [ google_compute_target_https_proxy.https_proxy ]
+  
+}
+
+
+#resource block for Configuration of backend service with cdn policy
+resource "google_compute_backend_service" "psc_backend" {
+  project               = module.project-factory.project_id
+  #for_each              = var.neg_details
+  name                  = "sei-wilis-wil-bnd-apg-glb-${var.environment}-01"
+  port_name             = "https"
+  protocol              = "HTTPS"
+  load_balancing_scheme = "EXTERNAL_MANAGED"
+  enable_cdn            = "false"
+  backend {
+    group = "https://www.googleapis.com/compute/v1/projects/${module.project-factory.project_id}/regions/us-central1/networkEndpointGroups/sei-wilis-wil-neg-apigee-usc1-${var.environment}-01"
+  }
+  log_config {
+    enable = true
+  }
+  iap {
+    enabled = false
+  }
+}
+ 
+#resource block for Configuration of url map
+resource "google_compute_url_map" "url_map" {
+  project         = module.project-factory.project_id
+  name            = "sei-wilis-wil-xlb-glb-${var.environment}-01"
+  default_service = google_compute_backend_service.psc_backend.id 
+  #default_service = google_compute_backend_service.dr_backend[0].id  
+  host_rule {
+    hosts        = var.managed_domains
+    path_matcher = "allpaths"
+  }
+  
+  path_matcher {
+    name            = "allpaths"
+    default_service = google_compute_backend_service.psc_backend.id
+    path_rule {
+      paths   = ["/*"]
+      service =  google_compute_backend_service.psc_backend.id
+    }
+   
+  }
+  
+  depends_on = [google_compute_backend_service.psc_backend,]# google_compute_backend_service.dr_backend]
+  
+  }
+
+#resource block for Configuration of Target Https proxy with ssl certificate detail
+resource "google_compute_target_https_proxy" "https_proxy" {
+ project           = module.project-factory.project_id
+  name             = "sei-wilis-wil-pxy-apg-glb-${var.environment}-01"
+  url_map          = google_compute_url_map.url_map.id
+  ssl_certificates = [google_compute_ssl_certificate.ssl_cert.id]#google_compute_managed_ssl_certificate.cert1.id]#,google_compute_managed_ssl_certificate.cert.id]
+  depends_on       = [google_compute_url_map.url_map]
+  
+}
+
+
+
+
+
+
+
+
+

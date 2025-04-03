@@ -1,0 +1,83 @@
+#resource block to create service identity
+resource "google_project_service_identity" "apigee_sa" {
+  provider = google-beta
+  project  = module.project-factory.project_id 
+  service  = "apigee.googleapis.com"
+}
+
+#resource block to create kms keys
+resource "google_kms_crypto_key_iam_member" "apigee_sa_keyuser" {
+  for_each = var.keyrings
+  crypto_key_id = google_kms_crypto_key.kms_crypto_key[each.key].id
+  role          = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
+
+  member = "serviceAccount:${google_project_service_identity.apigee_sa.email}"
+}
+#resource block to create apigee organization
+resource "google_apigee_organization" "apigee_org" {
+  analytics_region                     = "us-central1"
+  display_name                         = module.project-factory.project_id
+  description                          = "Apigee Org"
+  project_id                           = module.project-factory.project_id
+  authorized_network                   = google_compute_network.vpc.id
+  runtime_database_encryption_key_name = "projects/sei-wilis-app-${var.environment}/locations/us-central1/keyRings/sei-wilis-wil-kms-apgrunkrng-usc1-${var.environment}-01/cryptoKeys/sei-wilis-wil-kms-apgrunkey-usc1-${var.environment}-01" #google_kms_crypto_key.kms_crypto_key.id
+  runtime_type = "CLOUD"
+  billing_type = "PAYG"
+  depends_on = [
+    google_kms_crypto_key_iam_member.apigee_sa_keyuser,
+  ]
+}
+
+#resource block to create apigee instance
+resource "google_apigee_instance" "apigee_instance" {
+  name                     = var.apigee_instance_name
+  location                 = "us-central1"
+  description              = "Apigee Runtime Instance"
+  org_id                   = google_apigee_organization.apigee_org.id
+  disk_encryption_key_name = "projects/sei-wilis-app-${var.environment}/locations/us-central1/keyRings/sei-wilis-wil-kms-apgdiskrng-usc1-${var.environment}-01/cryptoKeys/sei-wilis-wil-kms-apgdiskey-usc1-${var.environment}-01"
+  ip_range = var.runtime_ip_cidr_range  
+
+}
+
+#resource block to create apigee environment
+resource "google_apigee_environment" "env" {
+  name         = var.env_name
+  description  = "Apigee Environment"
+  display_name = var.env_name
+  org_id       = google_apigee_organization.apigee_org.id
+  deployment_type = "PROXY"
+  
+}
+
+#resource block to create apigee environment group
+resource "google_apigee_envgroup" "env_grp" {
+    name      = var.env_grp
+    hostnames = var.hostnames
+    org_id    = google_apigee_organization.apigee_org.id
+  
+}
+
+#resouce block to create apigee environment group attachment
+resource "google_apigee_envgroup_attachment" "env_group_attachment" {
+  
+  envgroup_id  = google_apigee_envgroup.env_grp.id
+  
+  environment  = google_apigee_environment.env.name
+  
+}
+
+#resource block to create apigee instance attachment
+resource "google_apigee_instance_attachment" "apigee_instance_attachment" {
+  instance_id  = google_apigee_instance.apigee_instance.id
+  
+  environment  = google_apigee_environment.env.name 
+}
+
+#Resource block for creation of Apigee target server
+resource "google_apigee_target_server" "apigee_target_server" {
+  for_each = var.target_servers
+  name             = each.value.name
+  host             = each.value.host
+  port             = each.value.port
+  env_id           = google_apigee_environment.env.id
+}

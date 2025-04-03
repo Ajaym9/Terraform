@@ -1,0 +1,89 @@
+#resource block for creation of postgres sql instance
+resource "google_sql_database_instance" "sql-instance" {
+  name             = var.sql_name
+  region           = "us-central1"
+  database_version = "POSTGRES_15"
+  project = module.project-factory.project_id
+  instance_type = "CLOUD_SQL_INSTANCE"
+  
+  settings {
+    
+    tier      = var.tier
+    edition   = "ENTERPRISE"
+    disk_type = "PD_SSD"
+    #activation_policy = "NEVER"
+    
+  backup_configuration {
+      location = var.backup_location
+      enabled    = true
+      start_time = "02:00"  #(UTC)
+      point_in_time_recovery_enabled = var.point_in_time_recovery_enabled
+      backup_retention_settings {
+        retained_backups =7
+      } 
+    }
+      database_flags {
+        name = "max_connections"
+        value = "1500"
+      }
+    disk_size = var.disk_size
+    ip_configuration {
+      ipv4_enabled    = var.ipv4_enabled
+      dynamic "authorized_networks" {
+        for_each = var.authorized_networks
+
+        content {
+          name  = authorized_networks.value.name
+          value = authorized_networks.value.value
+        }
+      }
+           
+      private_network = "projects/${module.project-factory.project_id}/global/networks/sei-wilis-wil-vpc-${var.environment}-01"
+      psc_config {
+        allowed_consumer_projects = [ ]
+      }
+    allocated_ip_range = "sei-wilis-wil-psc-psql-usc1-${var.environment}-01"
+     #require_ssl = true
+     ssl_mode = "ENCRYPTED_ONLY"
+    }
+    availability_type = var.availability_type
+  }
+  root_password = var.root_password
+  deletion_protection = true
+  
+  
+}
+
+#resource block for creation of database for sql instance
+ resource "google_sql_database" "database" {
+   for_each    = toset([])
+   name = each.key
+   project  = module.project-factory.project_id
+   instance = google_sql_database_instance.sql-instance.name
+   depends_on = [google_sql_database_instance.sql-instance]
+ }
+
+resource "google_sql_ssl_cert" "client_cert" {
+  project     = module.project-factory.project_id
+  common_name = "sei-wilis-wil-sql-ssl-${var.environment}-01"
+  instance    = google_sql_database_instance.sql-instance.name 
+}
+
+ 
+# Create SQL users and generate password
+resource "google_sql_user" "sql_user" {
+  for_each = toset(var.sql_usernames)
+  project = module.project-factory.project_id
+  name     = each.key
+  instance = google_sql_database_instance.sql-instance.name
+  password = random_password.sql_password[each.key].result
+}
+
+#Generate random passwords for each SQL user
+resource "random_password" "sql_password" {
+ for_each = toset(var.sql_usernames)
+ length  = 16
+ special = true
+ numeric = true
+
+}

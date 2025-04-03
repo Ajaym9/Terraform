@@ -1,0 +1,36 @@
+#resource block for creation of gcs bucket
+resource "google_storage_bucket" "bucket" {
+  project                     = module.project-factory.project_id
+  for_each                    = toset(var.gcs_bucket_name)
+  name                        = each.key
+  location                    = "us-central1"
+  force_destroy               = true
+  uniform_bucket_level_access = true
+  public_access_prevention = "enforced"
+  versioning {
+    enabled =true
+  }
+  logging{
+    log_bucket = google_logging_project_bucket_config.log_bucket.bucket_id
+  }
+  lifecycle {
+    prevent_destroy = true
+  }
+  depends_on = [google_logging_project_bucket_config.log_bucket]
+}
+
+#resource block to add object to gcs bucket
+resource "google_storage_bucket_object" "folder" {
+  for_each = tomap(var.gcs_folder_details)
+  name   = each.value.gcs_folder_name
+  content = "sei-willis"
+  bucket = each.value.bucket_name
+  depends_on = [ google_storage_bucket.bucket ]
+}
+
+resource "google_logging_project_bucket_config" "log_bucket" {
+    project    = module.project-factory.project_id
+    location  = "us-central1"
+    retention_days = 30
+    bucket_id = "sei-wilis-wil-log-gcs-usc1-${var.environment}-01" 
+}

@@ -1,0 +1,17 @@
+#resource block for creation of pubsub topic
+resource "google_pubsub_topic" "pubsub" {
+  for_each               = toset(var.pubsubtopic_name)
+  name                   = each.key         
+  project                = module.project-factory.project_id
+  
+}
+
+#resource block for creation of subcription to pubsub topic
+resource "google_pubsub_subscription" "sub" {
+  for_each                   = tomap(var.pubsubsubscription_details)
+  name                       = each.value.name 
+  topic                      = each.value.topic
+  project                    = module.project-factory.project_id   
+  depends_on                  = [google_pubsub_topic.pubsub1]
+  
+ }

@@ -1,0 +1,9 @@
+#resource block for creating dns-peering
+resource "google_service_networking_peered_dns_domain" "dns-peering" {
+   name       = var.dns_peering_name
+   project    = module.project-factory.project_id
+   network    = google_compute_network.vpc.name
+   dns_suffix = var.dns_suffix_name
+   
+   
+}

@@ -1,0 +1,30 @@
+//custom dashboard creation
+resource "google_monitoring_dashboard" "dashboard" {
+    project = module.project-factory.project_id
+    dashboard_json = jsonencode(
+        merge(
+          jsondecode(file("${each.value}")),
+          {
+            displayName = "sei-wilis-wil-mon-${replace(basename(each.value), ".json", "")}-${var.environment}-01"
+          }
+        )
+    )
+  
+}
+
+
+locals {
+dashboard_file_name = {
+"dashboard1" =  "./dashboards/sql-dashboard.json",
+"dashboard2" =  "./dashboards/gke-dashboard.json",
+"dashboard3" =  "./dashboards/lb-dashboard.json",
+"dashboard4" =  "./dashboards/apigee-dashboard.json",
+"dashboard5" =  "./dashboards/log-dashboard.json",
+"dashboard6" =  "./dashboards/incident-dashboard.json",
+}
+}
+
+
+
+
+

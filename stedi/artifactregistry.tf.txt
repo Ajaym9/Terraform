@@ -1,0 +1,10 @@
+#resource block to create artifact registry
+resource "google_artifact_registry_repository" "my-repo" {
+project      = module.project-factory.project_id
+for_each = toset(var.artifact_registry)
+  repository_id = each.key
+  location      = "us-central1"
+  description   = "Artifact Registry"
+  format        = "DOCKER"
+  
+}

@@ -1,0 +1,22 @@
+#resource block for creation of firewall rule
+resource "google_compute_firewall" "firewall" {
+  for_each = tomap(var.firewall_details)
+  name          = each.value.firewall_name
+  network       =google_compute_network.vpc.self_link 
+  project       = module.project-factory.project_id
+  priority      = each.value.priority
+  direction     = each.value.direction
+  source_ranges = each.value.src_ranges
+  allow {
+    protocol = each.value.protocol
+    ports    = each.value.ports
+  }
+  depends_on = [google_compute_network.vpc]
+  
+}
+
+
+
+
+
+

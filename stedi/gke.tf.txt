@@ -1,0 +1,52 @@
+#resource block for creation of gke cluster
+resource "google_container_cluster" "cluster" {
+  name                     = var.cluster_name
+  project                  = module.project-factory.project_id
+  location                 = "us-central1"
+  network                  = "sei-wilis-wil-vpc-${var.environment}-01"
+  subnetwork               =  "sei-wilis-wil-sub-usc1-${var.environment}-01"
+  enable_autopilot = true
+  cluster_autoscaling {
+    auto_provisioning_defaults {
+      service_account = "project-service-account@sei-wilis-app-${var.environment}.iam.gserviceaccount.com"
+      oauth_scopes = [
+        "https://www.googleapis.com/auth/cloud-platform"
+      ]
+    }
+  }
+    master_authorized_networks_config {
+    cidr_blocks {
+      cidr_block   = ""
+      display_name = ""
+    }
+    cidr_blocks {
+      cidr_block   = ""
+      display_name = ""
+    }
+   
+
+  }  
+
+  private_cluster_config {
+    enable_private_endpoint = var.private_endpoint
+    enable_private_nodes   = true 
+    master_ipv4_cidr_block = var.master_ipv4_cidr_block
+  }
+  
+  ip_allocation_policy {
+    cluster_secondary_range_name = var.range_name
+    services_secondary_range_name = var.range_name_2
+  }
+
+resource_labels = {
+  mesh_id = "proj-${module.project-factory.project_number}"
+}
+addons_config {
+    gke_backup_agent_config {
+      enabled = true
+    }
+  }
+  deletion_protection = true
+ 
+  
+}

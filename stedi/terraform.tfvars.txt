@@ -1,0 +1,343 @@
+project_name = ""
+project_id = ""
+org_id = 
+billing_acct_id = ""
+folder_id = 
+environment = "qa"
+
+#vpc details
+vpc_name="sei-wilis-wil-vpc-qa-01"
+subnet_name= "sei-wilis-wil-sub-usc1-qa-01"
+ip_range = ""
+
+range_name="sei-wilis-wil-sub-gkepod-usc1-qa-01"
+sec_ip_range=""
+range_name_2="sei-wilis-wil-sub-gkesvc-usc1-qa-01"
+sec_ip_range_2=""
+
+subnet_details = {
+    "subnet_1"= {
+        subnet_name = "sei-wilis-wil-pxy-https-qa-01"
+        ip_range = ""
+        vpc_name = "sei-wilis-wil-vpc-qa-01"
+        create = true
+        purpose = "REGIONAL_MANAGED_PROXY"
+
+    }
+}
+
+
+#eip details
+external_ip_name = ["sei-wilis-wil-eip-nat-usc1-qa-01","sei-wilis-wil-eip-nat-usw2-dr-01" ]#"sei-wilis-wil-eip-gcejump-usc1-qa-01","sei-wilis-wil-eip-gkesolr-usc1-qa-01"]
+global_ip_name =["sei-wilis-wil-eip-apg-glb-qa-01"]
+internal_ip_details={
+  "ip1"={
+    name = "sei-wilis-wil-iip-solrdns-qa-01"
+    subnet_name = "sei-wilis-wil-sub-usc1-qa-01"
+    address = ""
+    create = true
+  }
+}
+
+#router details
+router_name = "sei-wilis-wil-rtr-usc1-qa-01"
+
+#nat details
+nat_name = "sei-wilis-wil-nat-usc1-qa-01"
+
+#psc details
+psc_ip_range = {
+    "sei-wilis-wil-psc-psql-usc1-qa-01"={
+        prefix_length = 24
+        address = ""
+        
+        }
+    "sei-wilis-wil-apg-ctlplne-usc1-qa-01" = {
+        prefix_length = 28
+        address = ""
+        
+    }
+    "sei-wilis-wil-apg-runtime-usc1-qa-01" = {
+        prefix_length = 22
+        address = ""
+        
+    }
+}
+
+
+#kms details
+keyrings = {
+    "sei-wilis-wil-kms-apgrunkrng-usc1-qa-01"={
+        
+        keyname = "sei-wilis-wil-kms-apgrunkey-usc1-qa-01"
+        algorithm ="GOOGLE_SYMMETRIC_ENCRYPTION"
+        protection_level = "SOFTWARE"
+        rotation_period ="7776000s"
+        purpose ="ENCRYPT_DECRYPT"
+
+
+    },
+    "sei-wilis-wil-kms-apgdiskrng-usc1-qa-01"={
+            
+            keyname ="sei-wilis-wil-kms-apgdiskey-usc1-qa-01"
+            algorithm ="GOOGLE_SYMMETRIC_ENCRYPTION"
+            rotation_period ="7776000s"
+            protection_level = "SOFTWARE"
+            purpose = "ENCRYPT_DECRYPT"
+
+    }
+}
+
+#apigee details
+#peering_ip_cidr_range = ""
+runtime_ip_cidr_range = ""
+apigee_instance_name = "sei-wilis-wil-apg-usc1-qa-01"
+env_grp =  "sei-wilis-wil-envgrp-qa-01"
+env_name = "sei-wilis-wil-env-qa-01"
+hostnames = [""]
+target_servers ={
+   "server-1" = {
+    name = "sei-wilis-frontend"
+    host = "frontend-api.cap-qa.capella.edu"
+    port = "80"
+    }
+    "server-2" = {    
+    name = "sei-willis-backend"
+    host = "backend-api.cap-qa.capella.edu"
+    port = "80"
+    }
+    # "server-3" = {
+    # name = "sei-wilis-frontend-dr"
+    # host = "dr.frontend-api.cap-qa.capella.edu"
+    # port = "80"
+    # }
+    # "server-4" = {    
+    # name = "sei-willis-backend-dr"
+    # host = "dr.backend-api.cap-qa.capella.edu"
+    # port = "80"
+    # }
+}
+
+
+ 
+ #neg details
+neg_details = {
+   "sei-wilis-wil-neg-apigee-usc1-qa-01"= {
+          psc_target_service = "projects/b8fda9e0c3e531d7f-tp/regions/us-central1/serviceAttachments/apigee-us-central1-wazh"
+          network_endpoint_type = "PRIVATE_SERVICE_CONNECT"
+   }
+}
+ 
+ #gke cluster details
+cluster_name = "sei-wilis-wil-gke-usc1-qa-01"
+cluster_ipv4_cidr_block = ""
+master_ipv4_cidr_block = ""
+services_ipv4_cidr_block = ""
+private_endpoint = false
+ 
+# External load balancer details 
+cert_name = "sei-wilis-wil-ssl-apg-qa-01"
+cert1_name = "sei-wilis-wil-ssl-apg-qa-02"
+managed_domains = ["cap-qa.capella.edu"]
+ 
+ #cloud sql details
+sql_name = "sei-wilis-wil-psq-usc1-qa-01"    
+tier      = "db-custom-2-6144"
+disk_size = 10
+ipv4_enabled = true
+root_password = "sei_capella"
+authorized_networks_name = "sql_auth_network"
+authorized_networks_value = "74.81.185.180"
+authorized_networks_name1 = "sei-wilis-wil-sql-auth-nw-qa-01"
+authorized_networks_value1 = "35.234.176.144/29"
+authorized_networks = [
+  {
+    name  = "sql_auth_network"
+    value = ""
+  },
+]
+availability_type = "ZONAL"
+backup_location = "us"
+point_in_time_recovery_enabled = true
+sql_replica_name = "sei-wilis-wil-psq-rpl-usw2-qa-01"
+backup= false
+sql_usernames = ["user-1"]
+sql_alias = ["user-1"]
+ 
+ #vm instance details
+gce_name = "sei-wilis-wil-gce-jmp-usc1-qa-01"
+machine_type ="n1-standard-1"
+zone = "us-central1-c"
+image ="debian-12-bookworm-v20240515"
+type = "pd-ssd"
+size ="20"
+scopes =["cloud-platform"]
+
+vmdetails = {
+    "vm1" ={
+    name = "sei-wilis-wil-gce-jmp-usc1-qa-02"
+    machine_type ="e2-medium"
+    zone = "us-central1-c"
+    image ="windows-server-2016-dc-v20240711"
+    type = "pd-ssd"
+    size ="50"
+    scopes =["cloud-platform"]
+    }
+}
+ 
+ #firewall details
+ firewall_details={
+    "rule1"={
+firewall_name = "sei-wilis-wil-fwr-iap-qa-01"
+priority = 1000
+direction = "INGRESS"
+src_ranges = [""]
+protocol = "TCP"
+ports = ["22", "3389"]
+ }
+ }
+ 
+ #dns peering details
+dns_peering_name = "sei-wilis-wil-dns-peer-qa-01"
+dns_suffix_name = "cap-qa.capella.edu."
+
+
+#control_ip_range = ""
+
+#gcs bucket details
+gcs_bucket_name = [""]
+#gcs_folder_name = ["processed/","request/","response/"]
+
+gcs_folder_details ={
+
+    "folder1"={
+        gcs_folder_name = "processed/"
+        bucket_name = ""
+    }
+    
+
+
+    }
+
+
+
+
+#service account details
+service_account_id = [""]
+
+service_account_name =[""]
+#Firestore details
+firestore_name = ["sei-wilis-wil-gfs-db-qa-01"]
+#Pubsub details
+topic_name      =  "sei-wilis-wil-psb-qa-01"
+sub_name         =  "sei-wilis-wil-psb-qa-01"
+pubsubtopic_name = ["sei-wilis-wil-psb-qa-01"] 
+pubsubsubscription_details = {
+    "sub1" = {
+        name = "sei-wilis-wil-psb-qa-01"
+        topic = "sei-wilis-wil-psb-qa-01"
+    }
+    
+
+}
+
+# dns details
+managed_zone = {
+    "zone1" = {
+        managed_zone_name =   "sei-wilis-wil-dns-gkebed-qa-01"
+        dns_name = "backend-api.cap-qa.capella.edu."
+    } 
+    "zone2" = {
+        managed_zone_name =   "sei-wilis-wil-dns-gkefed-qa-01"
+        dns_name = "frontend-api.cap-qa.capella.edu."
+    } 
+    "zone3" = {
+        managed_zone_name =   "sei-wilis-wil-dns-solr-qa-01"
+        dns_name = "solr.qasbl.capella.edu."
+    } 
+    "zone4" = {
+        managed_zone_name =   "sei-wilis-wil-dns-sql-qa-01"
+        dns_name = "qa-sql.api.cap-qa.capella.edu."
+    }
+    "zone5" = {
+        managed_zone_name =   "sei-wilis-wil-dns-redis-qa-01"
+        dns_name = "qa-redis.api.cap-qa.capella.edu."
+    }  
+   
+    
+}
+
+ record_set_details = {
+    "recordset1" = {
+         name = "backend-api.cap-qa.capella.edu."
+         managed_zone = "sei-wilis-wil-dns-gkebed-qa-01"
+         rrdatas = [""]
+    }
+    "recordset2" = {
+         name = "frontend-api.cap-qa.capella.edu."
+         managed_zone = "sei-wilis-wil-dns-gkefed-qa-01"
+         rrdatas = [""]
+    }
+     "recordset3" = {
+         name = "qa-sql.api.cap-qa.capella.edu."
+         managed_zone = "sei-wilis-wil-dns-sql-qa-01"
+         rrdatas = [""]
+    }
+    "recordset4" = {
+         name = "qa-redis.api.cap-qa.capella.edu."
+         managed_zone = "sei-wilis-wil-dns-redis-qa-01"
+         rrdatas = [""]
+     }
+   
+}
+
+
+#values for artifacr registry
+artifact_registry=["sei-wil-wilis-gar-cap-qa-01"]
+
+
+redis_cluster_details = {
+  "cluster1" = {
+    redis_cluster_name = "sei-wilis-wil-red-usc1-qa-01"
+    network_name       = "projects/sei-wilis-app-qa/global/networks/sei-wilis-wil-vpc-qa-01"
+
+  }
+  
+
+}
+
+
+network_policy_details = {
+  "policy1" = {
+    policy_name  = "sei-wilis-wil-ntw-redispol-qa-01"
+    network_name = "projects/sei-wilis-app-qa/global/networks/sei-wilis-wil-vpc-qa-01"
+    subnet_name  = ["projects/sei-wilis-app-qa/regions/us-central1/subnetworks/sei-wilis-wil-sub-usc1-qa-01"]
+
+  }
+}
+  notification_channel_details = {
+"channel1" = {
+ create = false
+ notification_channel_name = "channel1"
+ email_address             = ""
+
+  }
+  
+}
+
+monitoring_details ={
+    "alert_policy-1" = {
+     display_name       = "sei-wilis-wil-load-balancer-504-error-stg-01"
+    combiner           = "OR"
+    condition_name     = "load-balancer-504-error"
+    filter             = "metric.type=\"loadbalancing.googleapis.com/https/request_count\" AND metric.label.\"response_code\"=\"504\" AND resource.type=\"https_lb_rule\""
+    duration           = "60s"
+    threshold_value    = "5"
+    comparison         = "COMPARISON_GT"
+    alignment_period   = "300s"
+    per_series_aligner = "ALIGN_RATE"
+  }
+  
+}
+
+ 

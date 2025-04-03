@@ -1,0 +1,35 @@
+#resouce block to create vpc network
+resource "google_compute_network" "vpc" {
+  project                 = module.project-factory.project_id
+  name                    = var.vpc_name
+  auto_create_subnetworks = false
+  mtu                     = 1460
+}
+
+#resouce block to add subnets to vpc network
+resource "google_compute_subnetwork" "subnet" {
+  name                     = var.subnet_name
+  ip_cidr_range            = var.ip_range
+  region                   = "us-central1"
+  network                  = var.vpc_name
+  project                  = module.project-factory.project_id
+  private_ip_google_access = true
+# 
+
+  secondary_ip_range {
+    range_name    = var.range_name
+    ip_cidr_range = var.sec_ip_range
+  
+  }
+  secondary_ip_range {
+    range_name = var.range_name_2
+    ip_cidr_range = var.sec_ip_range_2
+  }
+  log_config {
+   aggregation_interval = "INTERVAL_10_MIN"
+    flow_sampling        = 0.5
+   metadata             = "INCLUDE_ALL_METADATA"
+ }
+ 
+}
+

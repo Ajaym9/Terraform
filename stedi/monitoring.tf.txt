@@ -1,0 +1,38 @@
+#resource block for creation of notification channel
+resource "google_monitoring_notification_channel" "basic" {
+ for_each     = tomap(var.notification_channel_details)
+  project      = module.project-factory.project_id
+  display_name = each.value.notification_channel_name
+  type         = "email"
+  labels = {
+    email_address = each.value.email_address
+
+  }
+}
+
+
+#resource block for creation of monitoring alert policies
+resource "google_monitoring_alert_policy" "alert_policy" {
+for_each              = tomap(var.monitoring_details)
+  display_name          = each.value.display_name
+  project               = module.project-factory.project_id
+  notification_channels = each.value.notification_channels
+  combiner              = each.value.combiner
+  conditions {
+    display_name = each.value.condition_name
+    condition_threshold {
+      filter          = each.value.filter
+      duration        = each.value.duration
+      threshold_value = each.value.threshold_value
+      comparison      = each.value.comparison
+      aggregations {
+        alignment_period   = each.value.alignment_period
+        per_series_aligner = each.value.per_series_aligner
+      }
+      trigger {
+        count =1
+      }
+    }
+  }
+  depends_on = [google_monitoring_notification_channel.basic]
+}

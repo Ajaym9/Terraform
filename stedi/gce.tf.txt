@@ -1,0 +1,28 @@
+resource "google_compute_instance" "instance" {
+  for_each    = tomap(var.vmdetails)
+  name         =   each.value.name
+  machine_type =   each.value.machine_type                                      
+ zone         =    each.value.zone                                              
+ project      =     module.project-factory.project_id 
+                                                     
+  boot_disk {
+    initialize_params {
+      image =  each.value.image                                                        
+      type =   each.value.type                                                   
+      size =   each.value.size                                                                   
+    }
+  }
+
+
+  network_interface {
+    network = 	google_compute_network.vpc.self_link
+    subnetwork = google_compute_subnetwork.subnet.self_link
+  }
+  
+  service_account {
+    email  =  "project-service-account@sei-wilis-app-${var.environment}.iam.gserviceaccount.com"             
+    scopes = each.value.scopes
+  }
+  metadata = {block-project-ssh-keys :"TRUE"}
+}
+
